@@ -1,4 +1,4 @@
-package com.pat.todoapp
+package com.pat.todoapp.view
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
