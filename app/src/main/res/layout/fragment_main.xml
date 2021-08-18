@@ -2,13 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.MainFragment">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/addTodoFloatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
@@ -37,14 +36,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
-                android:src="@drawable/toolbar_logo_ic"
+                android:src="@drawable/ic_toolbar_logo"
                 android:tint="#FFFFFF"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/noteToolbar"
+                app:layout_constraintStart_toStartOf="@+id/todoToolbar"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.Toolbar
-                android:id="@+id/noteToolbar"
+                android:id="@+id/todoToolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="?attr/actionBarSize"
@@ -54,15 +53,15 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/addNoteItem"
+                android:id="@+id/addTodoImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
                 android:padding="4dp"
-                android:src="@drawable/add_todo_ic"
+                android:src="@drawable/ic_add_todo"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/noteToolbar"
+                app:layout_constraintEnd_toEndOf="@+id/todoToolbar"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView

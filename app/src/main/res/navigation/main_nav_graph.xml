@@ -9,5 +9,14 @@
         android:id="@+id/mainFragment"
         android:name="com.pat.todoapp.view.MainFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_main" />
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainFragment_to_newTodoFragment"
+            app:destination="@id/newTodoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newTodoFragment"
+        android:name="com.pat.todoapp.view.NewTodoFragment"
+        android:label="fragment_new_todo"
+        tools:layout="@layout/fragment_new_todo" />
 </navigation>
