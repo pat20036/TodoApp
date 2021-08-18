@@ -65,7 +65,7 @@
             tools:layout_editor_absoluteY="0dp">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayout"
+                android:id="@+id/todoDescriptionInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
@@ -76,13 +76,14 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/todoDescriptionEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="What is to do?" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayout2"
+                android:id="@+id/todoDateInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
@@ -90,9 +91,10 @@
                 android:layout_marginRight="16dp"
                 app:layout_constraintEnd_toStartOf="@+id/textInputLayout"
                 app:layout_constraintStart_toEndOf="@+id/textInputLayout"
-                app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
+                app:layout_constraintTop_toBottomOf="@+id/todoDescriptionInputLayout">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/todoDateEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="When?"
@@ -107,7 +109,7 @@
                 android:layout_marginTop="16dp"
                 android:text="Category"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textInputLayout2" />
+                app:layout_constraintTop_toBottomOf="@+id/todoDateInputLayout" />
 
             <RadioGroup
                 android:id="@+id/radioGroup"

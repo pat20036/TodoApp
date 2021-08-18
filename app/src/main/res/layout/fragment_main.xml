@@ -89,7 +89,6 @@
         android:layout_marginTop="12dp"
         android:fontFamily="@font/montserrat"
         android:text="@string/to_do_s"
-        android:textColor="#000000"
         android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
