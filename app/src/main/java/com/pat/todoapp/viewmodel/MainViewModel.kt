@@ -1,7 +1,6 @@
 package com.pat.todoapp.viewmodel
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.pat.todoapp.model.TodoItem
 import com.pat.todoapp.room.TodoRoomRepository
 import com.pat.todoapp.viewmodel.MainViewModel.MainAction.SaveTodo
@@ -14,7 +13,14 @@ class MainViewModel(private val todoRoomRepository: TodoRoomRepository) : ViewMo
 
     val action = Channel<MainAction>()
 
+    private val _todoList = MutableLiveData<List<TodoItem>>()
+    val todoList: LiveData<List<TodoItem>> get() = _todoList
+
     init {
+
+        viewModelScope.launch {
+           _todoList.value = todoRoomRepository.getAllTodo()
+        }
         viewModelScope.launch {
             action.receiveAsFlow().collect {
                 when (it) {
