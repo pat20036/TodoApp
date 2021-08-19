@@ -89,8 +89,8 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginRight="16dp"
-                app:layout_constraintEnd_toStartOf="@+id/textInputLayout"
-                app:layout_constraintStart_toEndOf="@+id/textInputLayout"
+                app:layout_constraintEnd_toStartOf="@+id/todoDescriptionInputLayout"
+                app:layout_constraintStart_toEndOf="@+id/todoDescriptionInputLayout"
                 app:layout_constraintTop_toBottomOf="@+id/todoDescriptionInputLayout">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -116,7 +116,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Job"
+                    android:hint="Category"
+                    android:text="@string/job"
                     android:inputType="none"/>
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -134,9 +135,10 @@
                 android:id="@+id/cancelTodoButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="20dp"
                 android:text="Cancel"
-                app:layout_constraintStart_toStartOf="@+id/todoCategoryInputLayout"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/todoCategoryInputLayout" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

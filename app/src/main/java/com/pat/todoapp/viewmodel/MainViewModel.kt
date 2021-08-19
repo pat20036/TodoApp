@@ -25,8 +25,10 @@ class MainViewModel(private val todoRoomRepository: TodoRoomRepository) : ViewMo
         viewModelScope.launch {
             action.receiveAsFlow().collect {
                 when (it) {
+
                    is SaveTodo -> todoRoomRepository.addNewTodo(todoItem = TodoItem(0, it.todoDescription, it.todoDate, it.todoCategory))
-                    RefreshList -> todoRoomRepository.getAllTodo()
+
+                    RefreshList -> _todoList.value = todoRoomRepository.getAllTodo()
                 }
             }
 

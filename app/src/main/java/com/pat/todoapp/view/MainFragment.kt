@@ -57,7 +57,6 @@ class MainFragment : Fragment() {
         mainViewModel.action.trySend(RefreshList)
     }
 
-
     private fun updateUI() {
         mainViewModel.todoList.observe(viewLifecycleOwner, Observer {
             adapter.updateList(it)
