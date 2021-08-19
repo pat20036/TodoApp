@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import androidx.annotation.RequiresApi
 import com.pat.todoapp.R
@@ -31,15 +32,28 @@ class NewTodoFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setupDropdownMenu()
+    }
+
     override fun onStart() {
         super.onStart()
 
         binding.saveTodoButton.setOnClickListener {
-
             val todoDescription = binding.todoDescriptionEditText.text.toString()
             val todoDate = binding.todoDateEditText.text.toString()
-            mainViewModel.action.trySend(SaveTodo(todoDescription, todoDate, resources.getString(R.string.job)))
+            val todoCategory = binding.todoCategoryTextView.text.toString()
+            mainViewModel.action.trySend(SaveTodo(todoDescription, todoDate, todoCategory))
 
         }
+    }
+
+    private fun setupDropdownMenu()
+    {
+        val todoCategoriesList = resources.getStringArray(R.array.todo_categories)
+        val arrayAdapter = ArrayAdapter(requireContext(),R.layout.dropdown_item,todoCategoriesList)
+        binding.todoCategoryTextView.setAdapter(arrayAdapter)
     }
 }

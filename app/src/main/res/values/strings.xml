@@ -7,4 +7,9 @@
     <string name="job">Job</string>
     <string name="shopping">Shopping</string>
     <string name="other">Other</string>
+    <string-array name="todo_categories">
+        <item>Job</item>
+        <item>Shopping</item>
+        <item>Other</item>
+    </string-array>
 </resources>
