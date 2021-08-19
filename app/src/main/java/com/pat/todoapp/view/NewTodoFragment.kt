@@ -11,9 +11,13 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import com.pat.todoapp.R
 import com.pat.todoapp.databinding.FragmentNewTodoBinding
+import com.pat.todoapp.viewmodel.MainViewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+
 
 class NewTodoFragment : Fragment() {
 
+    private val mainViewModel by sharedViewModel<MainViewModel>()
     private lateinit var binding: FragmentNewTodoBinding
 
     override fun onCreateView(
@@ -22,5 +26,11 @@ class NewTodoFragment : Fragment() {
     ): View {
         binding = FragmentNewTodoBinding.inflate(layoutInflater)
         return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        mainViewModel.action.trySend(MainViewModel.MainAction.SaveTodo)
     }
 }
