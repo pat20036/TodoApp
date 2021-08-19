@@ -112,29 +112,29 @@
                 app:layout_constraintTop_toBottomOf="@+id/todoDateInputLayout" />
 
             <RadioGroup
-                android:id="@+id/radioGroup"
+                android:id="@+id/todoCategoryRadioGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="@+id/textView4"
                 app:layout_constraintTop_toBottomOf="@+id/textView4">
 
                 <RadioButton
-                    android:id="@+id/radioButton"
+                    android:id="@+id/jobRadioButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Job" />
+                    android:text="@string/job" />
 
                 <RadioButton
-                    android:id="@+id/radioButton2"
+                    android:id="@+id/shoppingRadioButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Shopping" />
+                    android:text="@string/shopping" />
 
                 <RadioButton
-                    android:id="@+id/radioButton3"
+                    android:id="@+id/otherRadioButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Other" />
+                    android:text="@string/other" />
             </RadioGroup>
 
             <Button
@@ -152,8 +152,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="Cancel"
-                app:layout_constraintStart_toStartOf="@+id/radioGroup"
-                app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+                app:layout_constraintStart_toStartOf="@+id/todoCategoryRadioGroup"
+                app:layout_constraintTop_toBottomOf="@+id/todoCategoryRadioGroup" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

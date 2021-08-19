@@ -8,10 +8,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
 import androidx.annotation.RequiresApi
 import com.pat.todoapp.R
 import com.pat.todoapp.databinding.FragmentNewTodoBinding
 import com.pat.todoapp.viewmodel.MainViewModel
+import com.pat.todoapp.viewmodel.MainViewModel.MainAction.RefreshList
+import com.pat.todoapp.viewmodel.MainViewModel.MainAction.SaveTodo
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
@@ -31,6 +34,12 @@ class NewTodoFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-        mainViewModel.action.trySend(MainViewModel.MainAction.SaveTodo)
+        binding.saveTodoButton.setOnClickListener {
+
+            val todoDescription = binding.todoDescriptionEditText.text.toString()
+            val todoDate = binding.todoDateEditText.text.toString()
+            mainViewModel.action.trySend(SaveTodo(todoDescription, todoDate, resources.getString(R.string.job)))
+
+        }
     }
 }

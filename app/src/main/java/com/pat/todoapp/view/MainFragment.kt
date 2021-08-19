@@ -13,6 +13,7 @@ import com.pat.todoapp.R
 import com.pat.todoapp.adapters.RecyclerAdapter
 import com.pat.todoapp.databinding.FragmentMainBinding
 import com.pat.todoapp.viewmodel.MainViewModel
+import com.pat.todoapp.viewmodel.MainViewModel.MainAction.RefreshList
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
@@ -48,6 +49,12 @@ class MainFragment : Fragment() {
         binding.addTodoImageView.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_newTodoFragment)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        mainViewModel.action.trySend(RefreshList)
     }
 
 
