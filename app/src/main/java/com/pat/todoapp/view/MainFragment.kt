@@ -59,8 +59,25 @@ class MainFragment : Fragment() {
 
     private fun updateUI() {
         mainViewModel.todoList.observe(viewLifecycleOwner, Observer {
+            if (it.isEmpty()) showInfo()
+            else hideInfo()
+
+            hideProgressBar()
             adapter.updateList(it)
         })
+    }
+
+    private fun showInfo() {
+        binding.emptyListInfoTextView.visibility = View.VISIBLE
+        hideProgressBar()
+    }
+
+    private fun hideInfo() {
+        binding.emptyListInfoTextView.visibility = View.GONE
+    }
+
+    private fun hideProgressBar() {
+        binding.progressBar.visibility = View.GONE
     }
 
 }
