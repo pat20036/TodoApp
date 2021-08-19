@@ -8,19 +8,19 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.pat.todoapp.R
 import com.pat.todoapp.adapters.RecyclerAdapter
 import com.pat.todoapp.databinding.FragmentMainBinding
+import com.pat.todoapp.viewmodel.MainAction
+import com.pat.todoapp.viewmodel.MainAction.RefreshTaskList
 import com.pat.todoapp.viewmodel.MainViewModel
-import com.pat.todoapp.viewmodel.MainViewModel.MainAction.RefreshList
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class MainFragment : Fragment() {
 
-    private val mainViewModel by sharedViewModel<MainViewModel>()
-    private lateinit var recyclerView: RecyclerView
+    private val mainViewModel by viewModel<MainViewModel>()
     private val adapter by lazy { RecyclerAdapter(mutableListOf()) }
     private lateinit var binding: FragmentMainBinding
 
@@ -36,8 +36,8 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recyclerView = binding.recyclerView
-        recyclerView.layoutManager = LinearLayoutManager(activity?.applicationContext)
+        val recyclerView = binding.recyclerView
+        recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
         updateUI()
 
@@ -54,15 +54,15 @@ class MainFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        mainViewModel.action.trySend(RefreshList)
+        mainViewModel.actions.trySend(RefreshTaskList)
     }
 
     private fun updateUI() {
         mainViewModel.todoList.observe(viewLifecycleOwner, Observer {
+            hideProgressBar()
             if (it.isEmpty()) showInfo()
             else hideInfo()
 
-            hideProgressBar()
             adapter.updateList(it)
         })
     }

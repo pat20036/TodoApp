@@ -1,10 +1,10 @@
 package com.pat.todoapp.viewmodel
 
 import androidx.lifecycle.*
+import com.pat.todoapp.DataValidator
 import com.pat.todoapp.model.TodoItem
 import com.pat.todoapp.room.TodoRoomRepository
-import com.pat.todoapp.viewmodel.MainViewModel.MainAction.RefreshList
-import com.pat.todoapp.viewmodel.MainViewModel.MainAction.SaveTodo
+import com.pat.todoapp.viewmodel.MainAction.RefreshTaskList
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -12,31 +12,59 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(private val todoRoomRepository: TodoRoomRepository) : ViewModel() {
 
-    val action = Channel<MainAction>()
+    val actions = Channel<MainAction>()
 
     private val _todoList = MutableLiveData<List<TodoItem>>()
     val todoList: LiveData<List<TodoItem>> get() = _todoList
 
+    private val _dataValidationError = MutableLiveData<Boolean>()
+    val dataValidationError: LiveData<Boolean> get() = _dataValidationError
+
     init {
 
         viewModelScope.launch {
-           _todoList.value = todoRoomRepository.getAllTodo()
+            _todoList.value = todoRoomRepository.getAllTodo()
         }
         viewModelScope.launch {
-            action.receiveAsFlow().collect {
-                when (it) {
+            actions.receiveAsFlow().collect { action ->
+                when (action) {
 
-                   is SaveTodo -> todoRoomRepository.addNewTodo(todoItem = TodoItem(0, it.todoDescription, it.todoDate, it.todoCategory))
+                    is MainAction.AddNewTask -> {
+                        if (DataValidator.isValidTaskData(
+                                action.description,
+                                action.date,
+                                action.category
+                            )
+                        ) {
+                            todoRoomRepository.addNewTodo(
+                                todoItem = TodoItem(
+                                    0,
+                                    action.description,
+                                    action.date,
+                                    action.category
+                                )
+                            )
 
-                    RefreshList -> _todoList.value = todoRoomRepository.getAllTodo()
+                        } else {
+                            _dataValidationError.value = true
+
+                        }
+                    }
+
+                    RefreshTaskList -> _todoList.value = todoRoomRepository.getAllTodo()
                 }
             }
 
         }
     }
+}
 
-    sealed class MainAction {
-        data class SaveTodo(val todoDescription: String, val todoDate: String, val todoCategory: String) : MainAction()
-        object RefreshList: MainAction()
-    }
+sealed class MainAction {
+    data class AddNewTask(
+        val description: String,
+        val date: String,
+        val category: String
+    ) : MainAction()
+
+    object RefreshTaskList : MainAction()
 }

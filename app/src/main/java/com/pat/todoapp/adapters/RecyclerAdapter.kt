@@ -17,10 +17,8 @@ class RecyclerAdapter(private val todoList: MutableList<TodoItem>) :
         val todoCategory: TextView = view.findViewById(R.id.todoCategoryTextView)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.todo_item, parent, false)
-        return ViewHolder(view)
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
+        ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.todo_item, parent, false))
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
@@ -35,7 +33,6 @@ class RecyclerAdapter(private val todoList: MutableList<TodoItem>) :
     }
 
     override fun getItemCount(): Int = todoList.size
-
 
     fun updateList(todo: List<TodoItem>) {
         todoList.apply {

@@ -1,27 +1,24 @@
 package com.pat.todoapp.view
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
-import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.RadioButton
-import androidx.annotation.RequiresApi
+import android.widget.Toast
+import androidx.lifecycle.Observer
 import com.pat.todoapp.R
 import com.pat.todoapp.databinding.FragmentNewTodoBinding
+import com.pat.todoapp.viewmodel.MainAction
 import com.pat.todoapp.viewmodel.MainViewModel
-import com.pat.todoapp.viewmodel.MainViewModel.MainAction.RefreshList
-import com.pat.todoapp.viewmodel.MainViewModel.MainAction.SaveTodo
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class NewTodoFragment : Fragment() {
 
-    private val mainViewModel by sharedViewModel<MainViewModel>()
+    private val mainViewModel by viewModel<MainViewModel>()
     private lateinit var binding: FragmentNewTodoBinding
 
     override fun onCreateView(
@@ -36,18 +33,27 @@ class NewTodoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupDropdownMenu()
-    }
-
-    override fun onStart() {
-        super.onStart()
+        observeDataValidationError()
 
         binding.saveTodoButton.setOnClickListener {
             val todoDescription = binding.todoDescriptionEditText.text.toString()
             val todoDate = binding.todoDateEditText.text.toString()
             val todoCategory = binding.todoCategoryTextView.text.toString()
-            mainViewModel.action.trySend(SaveTodo(todoDescription, todoDate, todoCategory))
-
+            mainViewModel.actions.trySend(
+                MainAction.AddNewTask(
+                    todoDescription,
+                    todoDate,
+                    todoCategory
+                )
+            )
         }
+    }
+
+    private fun observeDataValidationError()
+    {
+        mainViewModel.dataValidationError.observe(viewLifecycleOwner, Observer {
+            if(it) Toast.makeText(context, "Invalid data!", Toast.LENGTH_LONG).show()
+        })
     }
 
     private fun setupDropdownMenu()
