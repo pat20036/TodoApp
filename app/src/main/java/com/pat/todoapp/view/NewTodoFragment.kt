@@ -1,5 +1,6 @@
 package com.pat.todoapp.view
 
+import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.pat.todoapp.R
@@ -20,6 +22,10 @@ class NewTodoFragment : Fragment() {
 
     private val mainViewModel by viewModel<MainViewModel>()
     private lateinit var binding: FragmentNewTodoBinding
+
+    private var todoDescription: String = ""
+    private var todoDate: String = ""
+    private var todoCategory: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,19 +43,18 @@ class NewTodoFragment : Fragment() {
         observeIsDataAddedSuccessfully()
 
         binding.saveTodoButton.setOnClickListener {
-            val todoDescription = binding.todoDescriptionEditText.text.toString()
-            val todoDate = binding.todoDateEditText.text.toString()
-            val todoCategory = binding.todoCategoryTextView.text.toString()
-            mainViewModel.actions.trySend(
-                MainAction.AddNewTask(
-                    todoDescription,
-                    todoDate,
-                    todoCategory
-                )
-            )
+            todoDescription = binding.todoDescriptionEditText.text.toString()
+            todoDate = binding.todoDateEditText.text.toString()
+            todoCategory = binding.todoCategoryTextView.text.toString()
+
+            sendAddNewTaskAction(todoDescription, todoDate, todoCategory)
         }
 
         binding.cancelTodoButton.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
+        binding.backArrowItem.setOnClickListener {
             findNavController().popBackStack()
         }
     }
@@ -59,15 +64,27 @@ class NewTodoFragment : Fragment() {
             if (it >= 0) {
                 Toast.makeText(context, "Added successfully!", Toast.LENGTH_SHORT).show()
                 findNavController().popBackStack()
-            } else {
-
-            }
+            } else showDialog()
         })
+    }
+
+    private fun sendAddNewTaskAction(
+        todoDescription: String,
+        todoDate: String,
+        todoCategory: String
+    ) {
+        mainViewModel.actions.trySend(
+            MainAction.AddNewTask(
+                todoDescription,
+                todoDate,
+                todoCategory
+            )
+        )
     }
 
     private fun observeDataValidationError() {
         mainViewModel.dataValidationError.observe(viewLifecycleOwner, Observer {
-            if (it) Toast.makeText(context, "Invalid data!", Toast.LENGTH_LONG).show()
+            if (it) Toast.makeText(context, "Incorrect data!", Toast.LENGTH_LONG).show()
         })
     }
 
@@ -78,4 +95,24 @@ class NewTodoFragment : Fragment() {
         binding.todoCategoryTextView.setAdapter(arrayAdapter)
     }
 
+    private fun showDialog() {
+        val builder: AlertDialog.Builder? = activity?.let {
+            AlertDialog.Builder(it)
+        }
+        builder?.apply {
+            setMessage(R.string.an_error_occurred)
+            setTitle(R.string.error)
+            setPositiveButton(R.string.try_again,
+                DialogInterface.OnClickListener { _, _ ->
+                    sendAddNewTaskAction(todoDescription, todoDate, todoCategory)
+                })
+            setNegativeButton(R.string.cancel,
+                DialogInterface.OnClickListener { dialog, id ->
+                    dialog.cancel()
+                })
+        }
+        val dialog: AlertDialog? = builder?.create()
+        dialog?.show()
+
+    }
 }

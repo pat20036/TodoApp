@@ -7,6 +7,10 @@
     <string name="job">Job</string>
     <string name="shopping">Shopping</string>
     <string name="other">Other</string>
+    <string name="try_again">Try again</string>
+    <string name="cancel">Cancel</string>
+    <string name="an_error_occurred">An error occurred</string>
+    <string name="error">Error</string>
     <string-array name="todo_categories">
         <item>Job</item>
         <item>Shopping</item>
