@@ -12,6 +12,6 @@ interface TodoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addNewTodo(todoItem: TodoItem): Long
 
-    @Query("SELECT * FROM todo_table")
+    @Query("SELECT * FROM todo_table ORDER BY id DESC")
     suspend fun getAllNotes(): List<TodoItem>
 }

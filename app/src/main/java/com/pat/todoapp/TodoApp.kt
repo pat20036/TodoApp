@@ -1,7 +1,7 @@
 package com.pat.todoapp
 
 import android.app.Application
-import com.pat.todoapp.di.daoModule
+import com.pat.todoapp.di.databaseModule
 import com.pat.todoapp.di.repositoryModule
 import com.pat.todoapp.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
@@ -17,7 +17,7 @@ class TodoApp : Application() {
     private fun initKoin() {
         startKoin {
             androidContext(this@TodoApp)
-            modules(viewModelModule, repositoryModule, daoModule)
+            modules(viewModelModule, repositoryModule, databaseModule)
         }
     }
 }
