@@ -37,20 +37,15 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val recyclerView = binding.recyclerView
-        recyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = adapter
-        }
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = adapter
+
         updateUI()
 
-        binding.apply {
-            addTodoItem.setOnClickListener {
-                findNavController().navigate(R.id.action_mainFragment_to_newTodoFragment)
-            }
-            addTodoFloatingActionButton.setOnClickListener {
-                findNavController().navigate(R.id.action_mainFragment_to_newTodoFragment)
-            }
+        binding.addTodoFloatingActionButton.setOnClickListener {
+            findNavController().navigate(R.id.action_mainFragment_to_newTodoFragment)
         }
+
     }
 
     override fun onResume() {

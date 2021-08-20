@@ -45,24 +45,24 @@ class NewTodoFragment : Fragment() {
         observeDataValidationError()
         observeIsDataAddedSuccessfully()
 
-        binding.saveTodoButton.setOnClickListener {
-            todoDescription = binding.todoDescriptionEditText.text.toString()
-            todoDate = binding.todoDateEditText.text.toString()
-            todoCategory = binding.todoCategoryTextView.text.toString()
 
-            sendAddNewTaskAction(todoDescription, todoDate, todoCategory)
-        }
+        binding.apply {
+            saveTodoButton.setOnClickListener {
+                todoDescription = binding.todoDescriptionEditText.text.toString()
+                todoDate = binding.todoDateEditText.text.toString()
+                todoCategory = binding.todoCategoryTextView.text.toString()
 
-        binding.cancelTodoButton.setOnClickListener {
-            findNavController().popBackStack()
-        }
-
-        binding.backArrowItem.setOnClickListener {
-            findNavController().popBackStack()
-        }
-
-        binding.todoDateEditText.setOnClickListener {
-            showDatePicker()
+                sendAddNewTaskAction(todoDescription, todoDate, todoCategory)
+            }
+            cancelTodoButton.setOnClickListener {
+                findNavController().popBackStack()
+            }
+            backArrowItem.setOnClickListener {
+                findNavController().popBackStack()
+            }
+            todoDateEditText.setOnClickListener {
+                showDatePicker()
+            }
         }
     }
 
@@ -123,8 +123,7 @@ class NewTodoFragment : Fragment() {
 
     }
 
-    private fun showDatePicker()
-    {
+    private fun showDatePicker() {
         val datePicker =
             MaterialDatePicker.Builder.datePicker()
                 .setTitleText("Select date")
