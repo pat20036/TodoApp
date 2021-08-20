@@ -1,4 +1,4 @@
-package com.pat.todoapp
+package com.pat.todoapp.utils
 
 object DataValidator {
 
@@ -9,5 +9,5 @@ object DataValidator {
 
     private fun validateDate(date: String): Boolean = date.isNotBlank()
 
-    private fun isCategorySelected(category: String): Boolean = category.isNotEmpty()
+    private fun isCategorySelected(category: String): Boolean = category.isNotBlank()
 }

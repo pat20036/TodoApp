@@ -1,7 +1,7 @@
 package com.pat.todoapp.viewmodel
 
 import androidx.lifecycle.*
-import com.pat.todoapp.DataValidator
+import com.pat.todoapp.utils.DataValidator
 import com.pat.todoapp.model.TodoItem
 import com.pat.todoapp.room.TodoRoomRepository
 import com.pat.todoapp.viewmodel.MainAction.RefreshTaskList
@@ -20,6 +20,9 @@ class MainViewModel(private val todoRoomRepository: TodoRoomRepository) : ViewMo
     private val _dataValidationError = MutableLiveData<Boolean>()
     val dataValidationError: LiveData<Boolean> get() = _dataValidationError
 
+    private val _isDataAddedSuccessfully = MutableLiveData<Long>()
+    val isDataAddedSuccessfully: LiveData<Long> get() = _isDataAddedSuccessfully
+
     init {
 
         viewModelScope.launch {
@@ -36,7 +39,8 @@ class MainViewModel(private val todoRoomRepository: TodoRoomRepository) : ViewMo
                                 action.category
                             )
                         ) {
-                            todoRoomRepository.addNewTodo(
+
+                            _isDataAddedSuccessfully.value = todoRoomRepository.addNewTodo(
                                 todoItem = TodoItem(
                                     0,
                                     action.description,
@@ -47,7 +51,6 @@ class MainViewModel(private val todoRoomRepository: TodoRoomRepository) : ViewMo
 
                         } else {
                             _dataValidationError.value = true
-
                         }
                     }
 
