@@ -15,16 +15,16 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.datepicker.MaterialDatePicker.INPUT_MODE_TEXT
 import com.pat.todoapp.R
-import com.pat.todoapp.databinding.FragmentNewTodoBinding
+import com.pat.todoapp.databinding.FragmentAddNewTaskBinding
 import com.pat.todoapp.viewmodel.MainAction
 import com.pat.todoapp.viewmodel.MainViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class NewTodoFragment : Fragment() {
+class AddNewTaskFragment : Fragment() {
 
     private val mainViewModel by viewModel<MainViewModel>()
-    private lateinit var binding: FragmentNewTodoBinding
+    private lateinit var binding: FragmentAddNewTaskBinding
 
     private var todoDescription: String = ""
     private var todoDate: String = ""
@@ -34,7 +34,7 @@ class NewTodoFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentNewTodoBinding.inflate(layoutInflater)
+        binding = FragmentAddNewTaskBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -48,9 +48,9 @@ class NewTodoFragment : Fragment() {
 
         binding.apply {
             saveTodoButton.setOnClickListener {
-                todoDescription = binding.todoDescriptionEditText.text.toString()
-                todoDate = binding.todoDateEditText.text.toString()
-                todoCategory = binding.todoCategoryTextView.text.toString()
+                todoDescription = todoDescriptionEditText.text.toString()
+                todoDate = todoDateEditText.text.toString()
+                todoCategory = todoCategoryTextView.text.toString()
 
                 sendAddNewTaskAction(todoDescription, todoDate, todoCategory)
             }
@@ -67,9 +67,9 @@ class NewTodoFragment : Fragment() {
     }
 
     private fun observeIsDataAddedSuccessfully() {
-        mainViewModel.isDataAddedSuccessfully.observe(viewLifecycleOwner, Observer {
-            if (it >= 0) {
-                Toast.makeText(context, "Added successfully!", Toast.LENGTH_SHORT).show()
+        mainViewModel.isDataAddedSuccessfully.observe(viewLifecycleOwner, Observer { taskRoomId ->
+            if (taskRoomId >= 0) {
+                showToastMessage(resources.getString(R.string.added_successfully))
                 findNavController().popBackStack()
             } else showDialog()
         })
@@ -90,9 +90,11 @@ class NewTodoFragment : Fragment() {
     }
 
     private fun observeDataValidationError() {
-        mainViewModel.dataValidationError.observe(viewLifecycleOwner, Observer {
-            if (it) Toast.makeText(context, "Incorrect data!", Toast.LENGTH_LONG).show()
-        })
+        mainViewModel.dataValidationError.observe(
+            viewLifecycleOwner,
+            Observer { shouldBeErrorDisplayed ->
+                if (shouldBeErrorDisplayed) showToastMessage(resources.getString(R.string.incorrect_data))
+            })
     }
 
     private fun setupDropdownMenu() {
@@ -114,7 +116,7 @@ class NewTodoFragment : Fragment() {
                     sendAddNewTaskAction(todoDescription, todoDate, todoCategory)
                 })
             setNegativeButton(R.string.cancel,
-                DialogInterface.OnClickListener { dialog, id ->
+                DialogInterface.OnClickListener { dialog, _ ->
                     dialog.cancel()
                 })
         }
@@ -126,13 +128,17 @@ class NewTodoFragment : Fragment() {
     private fun showDatePicker() {
         val datePicker =
             MaterialDatePicker.Builder.datePicker()
-                .setTitleText("Select date")
+                .setTitleText(R.string.select_date)
                 .build()
 
-        datePicker.show(parentFragmentManager, "tag");
+        datePicker.show(parentFragmentManager, "NewTodoFragment")
 
         datePicker.addOnPositiveButtonClickListener {
             binding.todoDateEditText.setText(datePicker.headerText)
         }
+    }
+
+    private fun showToastMessage(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 }

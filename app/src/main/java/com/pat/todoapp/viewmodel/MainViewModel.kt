@@ -24,7 +24,6 @@ class MainViewModel(private val todoRoomRepository: TodoRoomRepository) : ViewMo
     val isDataAddedSuccessfully: LiveData<Long> get() = _isDataAddedSuccessfully
 
     init {
-
         viewModelScope.launch {
             _todoList.value = todoRoomRepository.getAllTodo()
         }

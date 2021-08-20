@@ -8,7 +8,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_margin="@dimen/medium_padding"
         app:cardBackgroundColor="@color/todo_background"
         app:cardCornerRadius="6dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -19,16 +19,16 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="16dp"
-            android:paddingTop="6dp"
-            android:paddingRight="16dp"
-            android:paddingBottom="6dp">
+            android:paddingLeft="@dimen/medium_padding"
+            android:paddingTop="@dimen/small_padding"
+            android:paddingRight="@dimen/medium_padding"
+            android:paddingBottom="@dimen/small_padding">
 
             <TextView
                 android:id="@+id/todoDescriptionTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="@dimen/todo_top_margin"
                 android:fontFamily="@font/montserrat"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -38,7 +38,7 @@
                 android:id="@+id/todoCategoryTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="@dimen/todo_end_margin"
                 android:fontFamily="@font/montserrat"
                 app:layout_constraintEnd_toStartOf="@+id/todoDateTextView"
                 app:layout_constraintTop_toTopOf="parent" />

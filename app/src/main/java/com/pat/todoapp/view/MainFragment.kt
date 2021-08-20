@@ -24,7 +24,6 @@ class MainFragment : Fragment() {
     private val adapter by lazy { RecyclerAdapter(mutableListOf()) }
     private lateinit var binding: FragmentMainBinding
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -45,7 +44,6 @@ class MainFragment : Fragment() {
         binding.addTodoFloatingActionButton.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_newTodoFragment)
         }
-
     }
 
     override fun onResume() {

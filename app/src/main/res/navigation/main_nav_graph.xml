@@ -12,11 +12,11 @@
         tools:layout="@layout/fragment_main" >
         <action
             android:id="@+id/action_mainFragment_to_newTodoFragment"
-            app:destination="@id/newTodoFragment" />
+            app:destination="@id/addNewTaskFragment" />
     </fragment>
     <fragment
-        android:id="@+id/newTodoFragment"
-        android:name="com.pat.todoapp.view.NewTodoFragment"
+        android:id="@+id/addNewTaskFragment"
+        android:name="com.pat.todoapp.view.AddNewTaskFragment"
         android:label="fragment_new_todo"
-        tools:layout="@layout/fragment_new_todo" />
+        tools:layout="@layout/fragment_add_new_task" />
 </navigation>
