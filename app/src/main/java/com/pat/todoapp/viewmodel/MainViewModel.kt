@@ -5,6 +5,7 @@ import com.pat.todoapp.utils.DataValidator
 import com.pat.todoapp.model.TodoItem
 import com.pat.todoapp.room.TodoRoomRepository
 import com.pat.todoapp.viewmodel.MainAction.RefreshTaskList
+import com.pat.todoapp.viewmodel.MainAction.ShowDatePicker
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -13,6 +14,7 @@ import kotlinx.coroutines.launch
 class MainViewModel(private val todoRoomRepository: TodoRoomRepository) : ViewModel() {
 
     val actions = Channel<MainAction>()
+    val showDatePicker = Channel<Unit>()
 
     private val _todoList = MutableLiveData<List<TodoItem>>()
     val todoList: LiveData<List<TodoItem>> get() = _todoList
@@ -22,6 +24,7 @@ class MainViewModel(private val todoRoomRepository: TodoRoomRepository) : ViewMo
 
     private val _isDataAddedSuccessfully = MutableLiveData<Long>()
     val isDataAddedSuccessfully: LiveData<Long> get() = _isDataAddedSuccessfully
+
 
     init {
         viewModelScope.launch {
@@ -54,6 +57,8 @@ class MainViewModel(private val todoRoomRepository: TodoRoomRepository) : ViewMo
                     }
 
                     RefreshTaskList -> _todoList.value = todoRoomRepository.getAllTodo()
+
+                    ShowDatePicker -> showDatePicker.trySend(Unit)
                 }
             }
 
@@ -69,4 +74,6 @@ sealed class MainAction {
     ) : MainAction()
 
     object RefreshTaskList : MainAction()
+    object ShowDatePicker : MainAction()
 }
+

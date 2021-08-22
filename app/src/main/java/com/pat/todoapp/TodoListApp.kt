@@ -7,7 +7,7 @@ import com.pat.todoapp.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
-class TodoApp : Application() {
+class TodoListApp : Application() {
     override fun onCreate() {
         super.onCreate()
 
@@ -16,7 +16,7 @@ class TodoApp : Application() {
 
     private fun initKoin() {
         startKoin {
-            androidContext(this@TodoApp)
+            androidContext(this@TodoListApp)
             modules(viewModelModule, repositoryModule, databaseModule)
         }
     }

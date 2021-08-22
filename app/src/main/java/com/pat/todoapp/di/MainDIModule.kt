@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.pat.todoapp.room.TodoDao
 import com.pat.todoapp.room.TodoDatabase
 import com.pat.todoapp.room.TodoRoomRepository
+import com.pat.todoapp.utils.TASK_LIST_TABLE_NAME
 import com.pat.todoapp.viewmodel.MainViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
@@ -23,14 +24,12 @@ val repositoryModule = module {
 val databaseModule = module {
 
     fun provideDatabase(application: Application): TodoDatabase {
-        return Room.databaseBuilder(application, TodoDatabase::class.java, "todo_table")
+        return Room.databaseBuilder(application, TodoDatabase::class.java, TASK_LIST_TABLE_NAME)
             .fallbackToDestructiveMigration()
             .build()
     }
 
-    fun provideTodoDao(database: TodoDatabase): TodoDao {
-        return  database.todoDao
-    }
+    fun provideTodoDao(database: TodoDatabase): TodoDao = database.todoDao
 
     single { provideDatabase(androidApplication()) }
     single { provideTodoDao(get()) }

@@ -2,9 +2,10 @@ package com.pat.todoapp.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.pat.todoapp.utils.TASK_LIST_TABLE_NAME
 
 
-@Entity(tableName = "todo_table")
+@Entity(tableName = TASK_LIST_TABLE_NAME)
 data class TodoItem(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
