@@ -15,7 +15,6 @@ import kotlinx.coroutines.launch
 class MainViewModel(private val todoRoomRepository: TodoRoomRepository) : ViewModel() {
 
     val actions = Channel<MainAction>()
-
     val showDatePicker = Channel<Unit>()
 
     private val _todoList = MutableStateFlow<List<TodoItem>?>(null)
@@ -27,41 +26,45 @@ class MainViewModel(private val todoRoomRepository: TodoRoomRepository) : ViewMo
     private val _isTodoAddedSuccessfully = MutableStateFlow<Boolean?>(null)
     val isTodoAddedSuccessfully: StateFlow<Boolean?> get() = _isTodoAddedSuccessfully
 
+    private val currentTodoItem = MutableStateFlow<TodoItem?>(null)
+
+
     init {
         viewModelScope.launch { _todoList.value = todoRoomRepository.getAllTodo() }
         viewModelScope.launch {
             actions.receiveAsFlow().collect { action ->
                 when (action) {
-
                     is AddNewTask -> {
-                        if (DataValidator.isValidTaskData(
-                                action.description,
-                                action.date,
-                                action.category
-                            )
-                        ) {
-                            val item = todoRoomRepository.addNewTodo(
-                                    todoItem = TodoItem(
-                                        0,
-                                        action.description,
-                                        action.date,
-                                        action.category
-                                    )
-                                )
-                            _isTodoAddedSuccessfully.value = item >= 0
+                        if (DataValidator.isValidTaskData(action.description, action.date, action.category)) {
+
+                            val currentItem = TodoItem(0, action.description, action.date, action.category)
+
+                            val itemResult = todoRoomRepository.addNewTodo(currentItem)
+                            currentTodoItem.value = currentItem
+                            _isTodoAddedSuccessfully.value = itemResult >= 0
 
                         } else {
                             _todoValidationError.value = true
                         }
                     }
 
-                    RefreshTaskList -> _todoList.value =
-                        todoRoomRepository.getAllTodo()
+                    RefreshTaskList -> _todoList.value = todoRoomRepository.getAllTodo()
 
                     ShowDatePicker -> showDatePicker.trySend(Unit)
+
+                    TryAddNewTaskAgain -> {
+                        if (DataValidator.isValidTaskData(currentTodoItem.value!!.todoDescription, currentTodoItem.value!!.todoDate, currentTodoItem.value!!.todoCategory)) {
+                            val result = todoRoomRepository.addNewTodo(currentTodoItem.value!!)
+                            if (result >= 0) {
+                                _isTodoAddedSuccessfully.value = true
+                            }
+                        } else {
+                            _todoValidationError.value = true
+                        }
+
+                    }
                 }
             }
-
         }
     }
 }
@@ -73,6 +76,7 @@ sealed class MainAction {
         val category: String
     ) : MainAction()
 
+    object TryAddNewTaskAgain : MainAction()
     object RefreshTaskList : MainAction()
     object ShowDatePicker : MainAction()
 }

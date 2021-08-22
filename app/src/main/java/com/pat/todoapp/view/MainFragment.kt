@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,12 +12,10 @@ import com.pat.todoapp.R
 import com.pat.todoapp.adapters.RecyclerAdapter
 import com.pat.todoapp.databinding.FragmentMainBinding
 import com.pat.todoapp.model.TodoItem
-import com.pat.todoapp.viewmodel.MainAction
 import com.pat.todoapp.viewmodel.MainAction.RefreshTaskList
 import com.pat.todoapp.viewmodel.MainViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -62,18 +59,18 @@ class MainFragment : Fragment() {
         todoList ?: return
 
         hideProgressBar()
-        if (todoList.isEmpty()) showInfo()
-        else hideInfo()
+        if (todoList.isEmpty()) showEmptyListInfo()
+        else hideEmptyListInfo()
 
         adapter.updateList(todoList)
     }
 
-    private fun showInfo() {
+    private fun showEmptyListInfo() {
         binding.emptyListInfoTextView.visibility = View.VISIBLE
         hideProgressBar()
     }
 
-    private fun hideInfo() {
+    private fun hideEmptyListInfo() {
         binding.emptyListInfoTextView.visibility = View.GONE
     }
 

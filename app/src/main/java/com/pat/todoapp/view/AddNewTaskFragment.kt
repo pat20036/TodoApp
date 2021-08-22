@@ -14,8 +14,10 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.pat.todoapp.R
 import com.pat.todoapp.databinding.FragmentAddNewTaskBinding
+import com.pat.todoapp.utils.NEW_TODO_FRAGMENT_TAG
 import com.pat.todoapp.viewmodel.MainAction
 import com.pat.todoapp.viewmodel.MainAction.ShowDatePicker
+import com.pat.todoapp.viewmodel.MainAction.TryAddNewTaskAgain
 import com.pat.todoapp.viewmodel.MainViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -27,10 +29,6 @@ class AddNewTaskFragment : Fragment() {
 
     private val mainViewModel by viewModel<MainViewModel>()
     private lateinit var binding: FragmentAddNewTaskBinding
-
-    private var todoDescription: String = ""
-    private var todoDate: String = ""
-    private var todoCategory: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,7 +43,6 @@ class AddNewTaskFragment : Fragment() {
 
         setupDropdownMenu()
 
-
         with(lifecycleScope)
         {
             launch { mainViewModel.showDatePicker.receiveAsFlow().collect { showDatePicker() } }
@@ -53,14 +50,9 @@ class AddNewTaskFragment : Fragment() {
             launch { mainViewModel.todoValidatorError.collect { showDataValidationErrorMessage(it) } }
         }
 
-
         binding.apply {
             saveTodoButton.setOnClickListener {
-                todoDescription = todoDescriptionEditText.text.toString()
-                todoDate = todoDateEditText.text.toString()
-                todoCategory = todoCategoryTextView.text.toString()
-
-                sendAddNewTaskAction(todoDescription, todoDate, todoCategory)
+                mainViewModel.actions.trySend(MainAction.AddNewTask(todoDescriptionEditText.text.toString(),todoDateEditText.text.toString(), todoCategoryEditText.text.toString()))
             }
             cancelTodoButton.setOnClickListener {
                 closeFragment()
@@ -82,19 +74,6 @@ class AddNewTaskFragment : Fragment() {
         } else showDialog()
     }
 
-    private fun sendAddNewTaskAction(
-        todoDescription: String,
-        todoDate: String,
-        todoCategory: String
-    ) {
-        mainViewModel.actions.trySend(
-            MainAction.AddNewTask(
-                todoDescription,
-                todoDate,
-                todoCategory
-            )
-        )
-    }
 
     private fun showDataValidationErrorMessage(shouldBeErrorDisplayed: Boolean?) {
         shouldBeErrorDisplayed ?: return
@@ -105,7 +84,7 @@ class AddNewTaskFragment : Fragment() {
         val todoCategoriesList = resources.getStringArray(R.array.todo_categories)
         val arrayAdapter =
             ArrayAdapter(requireContext(), R.layout.dropdown_item, todoCategoriesList)
-        binding.todoCategoryTextView.setAdapter(arrayAdapter)
+        binding.todoCategoryEditText.setAdapter(arrayAdapter)
     }
 
     private fun showDialog() {
@@ -117,7 +96,7 @@ class AddNewTaskFragment : Fragment() {
             setTitle(R.string.error)
             setPositiveButton(R.string.try_again,
                 DialogInterface.OnClickListener { _, _ ->
-                    sendAddNewTaskAction(todoDescription, todoDate, todoCategory)
+                    mainViewModel.actions.trySend(TryAddNewTaskAgain)
                 })
             setNegativeButton(R.string.cancel,
                 DialogInterface.OnClickListener { dialog, _ ->
@@ -134,7 +113,7 @@ class AddNewTaskFragment : Fragment() {
                 .setTitleText(R.string.select_date)
                 .build()
 
-        datePicker.show(parentFragmentManager, "NewTodoFragment")
+        datePicker.show(parentFragmentManager, NEW_TODO_FRAGMENT_TAG)
 
         datePicker.addOnPositiveButtonClickListener {
             binding.todoDateEditText.setText(datePicker.headerText)
