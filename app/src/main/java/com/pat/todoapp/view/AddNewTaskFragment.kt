@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -45,15 +44,16 @@ class AddNewTaskFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupDropdownMenu()
-        observeDataValidationError()
-        observeIsDataAddedSuccessfully()
 
-        lifecycleScope.launch {
-            mainViewModel.showDatePicker.receiveAsFlow().collect {
-                showDatePicker()
-            }
+
+        with(lifecycleScope)
+        {
+            launch { mainViewModel.showDatePicker.receiveAsFlow().collect { showDatePicker() } }
+            launch { mainViewModel.isTodoAddedSuccessfully.collect { showTaskResult(it) } }
+            launch { mainViewModel.todoValidatorError.collect { showDataValidationErrorMessage(it) } }
         }
-        
+
+
         binding.apply {
             saveTodoButton.setOnClickListener {
                 todoDescription = todoDescriptionEditText.text.toString()
@@ -74,13 +74,12 @@ class AddNewTaskFragment : Fragment() {
         }
     }
 
-    private fun observeIsDataAddedSuccessfully() {
-        mainViewModel.isDataAddedSuccessfully.observe(viewLifecycleOwner, Observer { taskRoomId ->
-            if (taskRoomId >= 0) {
-                showToastMessage(resources.getString(R.string.added_successfully))
-                closeFragment()
-            } else showDialog()
-        })
+    private fun showTaskResult(isTodoAddedSuccessfully: Boolean?) {
+        isTodoAddedSuccessfully ?: return
+        if (isTodoAddedSuccessfully) {
+            showToastMessage(resources.getString(R.string.added_successfully))
+            closeFragment()
+        } else showDialog()
     }
 
     private fun sendAddNewTaskAction(
@@ -97,12 +96,9 @@ class AddNewTaskFragment : Fragment() {
         )
     }
 
-    private fun observeDataValidationError() {
-        mainViewModel.dataValidationError.observe(
-            viewLifecycleOwner,
-            Observer { shouldBeErrorDisplayed ->
-                if (shouldBeErrorDisplayed) showToastMessage(resources.getString(R.string.incorrect_data))
-            })
+    private fun showDataValidationErrorMessage(shouldBeErrorDisplayed: Boolean?) {
+        shouldBeErrorDisplayed ?: return
+        if (shouldBeErrorDisplayed) showToastMessage(resources.getString(R.string.incorrect_data))
     }
 
     private fun setupDropdownMenu() {
@@ -130,9 +126,7 @@ class AddNewTaskFragment : Fragment() {
         }
         val dialog = builder?.create()
         dialog?.show()
-
     }
-
 
     private fun showDatePicker() {
         val datePicker =
@@ -147,7 +141,8 @@ class AddNewTaskFragment : Fragment() {
         }
     }
 
-    private fun showToastMessage(message: String) = Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    private fun showToastMessage(message: String) =
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 
     private fun closeFragment() = findNavController().popBackStack()
 

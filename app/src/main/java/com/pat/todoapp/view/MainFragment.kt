@@ -6,14 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pat.todoapp.R
 import com.pat.todoapp.adapters.RecyclerAdapter
 import com.pat.todoapp.databinding.FragmentMainBinding
+import com.pat.todoapp.model.TodoItem
 import com.pat.todoapp.viewmodel.MainAction
 import com.pat.todoapp.viewmodel.MainAction.RefreshTaskList
 import com.pat.todoapp.viewmodel.MainViewModel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -39,7 +43,9 @@ class MainFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
 
-        updateUI()
+        lifecycleScope.launch {
+            mainViewModel.todoList.collect { updateUI(it) }
+        }
 
         binding.addTodoFloatingActionButton.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_newTodoFragment)
@@ -52,14 +58,14 @@ class MainFragment : Fragment() {
         mainViewModel.actions.trySend(RefreshTaskList)
     }
 
-    private fun updateUI() {
-        mainViewModel.todoList.observe(viewLifecycleOwner, Observer {
-            hideProgressBar()
-            if (it.isEmpty()) showInfo()
-            else hideInfo()
+    private fun updateUI(todoList: List<TodoItem>?) {
+        todoList ?: return
 
-            adapter.updateList(it)
-        })
+        hideProgressBar()
+        if (todoList.isEmpty()) showInfo()
+        else hideInfo()
+
+        adapter.updateList(todoList)
     }
 
     private fun showInfo() {
